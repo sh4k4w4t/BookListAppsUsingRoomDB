@@ -1,6 +1,7 @@
 package sh4k4w4t.github.io.roomdatabasetest.repo;
 
 import android.app.Application;
+import android.content.Context;
 import android.os.AsyncTask;
 
 import java.util.ArrayList;
@@ -39,11 +40,13 @@ public class BookRepository {
         });
     }
 
-    public void UpdateBook(Book book) {
+    public void UpdateBook(Context context, Book book) {
         LibraryDatabase.databaseExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                bookDao.UpdateBook(book);
+//                bookDao.UpdateBook(book);
+                LibraryDatabase libraryDatabase= LibraryDatabase.getInstance(context);
+                libraryDatabase.bookDao().UpdateBook(book);
             }
         });
     }

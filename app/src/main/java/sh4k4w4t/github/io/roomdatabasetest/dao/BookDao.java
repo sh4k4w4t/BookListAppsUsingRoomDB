@@ -5,6 +5,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
+import static androidx.room.OnConflictStrategy.REPLACE;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public interface BookDao {
     @Delete
     void DeleteBook(Book book);
 
-    @Update
+    @Update(onConflict=REPLACE)
     void UpdateBook(Book book);
 
     @Query("select * from Book where writerId Like :writerIdNo")

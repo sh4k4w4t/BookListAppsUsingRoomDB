@@ -3,6 +3,7 @@ package sh4k4w4t.github.io.roomdatabasetest;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -10,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -38,6 +40,7 @@ public class WriterFragment extends Fragment implements WriterFragmentInterface 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentFirstBinding.inflate(inflater, container, false);
+        ToolbarMethod(binding);
 
         writerRepository = new WriterRepository(getActivity().getApplication());
 
@@ -88,6 +91,26 @@ public class WriterFragment extends Fragment implements WriterFragmentInterface 
         });
 
         return binding.getRoot();
+    }
+
+    private void ToolbarMethod(FragmentFirstBinding binding) {
+        binding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity(), "Hello 123", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        binding.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if(item.getItemId()==R.id.action_settings){
+                    Toast.makeText(getActivity(), "Setting section", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     private void DeleteWriter(int adapterPosition) {
