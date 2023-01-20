@@ -12,7 +12,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +24,12 @@ import sh4k4w4t.github.io.roomdatabasetest.adapter.writer.WriterDataController;
 import sh4k4w4t.github.io.roomdatabasetest.adapter.writer.WriterFragmentInterface;
 import sh4k4w4t.github.io.roomdatabasetest.databinding.FragmentFirstBinding;
 import sh4k4w4t.github.io.roomdatabasetest.model.Writer;
-import sh4k4w4t.github.io.roomdatabasetest.repo.LibraryRepo;
+import sh4k4w4t.github.io.roomdatabasetest.repo.WriterRepository;
 
 public class WriterFragment extends Fragment implements WriterFragmentInterface {
 
     private FragmentFirstBinding binding;
-    LibraryRepo libraryRepo;
+    WriterRepository writerRepository;
 
     WriterAdapter writerAdapter;
     List<Writer> allWriter = new ArrayList<>();
@@ -37,18 +39,28 @@ public class WriterFragment extends Fragment implements WriterFragmentInterface 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentFirstBinding.inflate(inflater, container, false);
 
-        libraryRepo = new LibraryRepo(getActivity().getApplication());
+        writerRepository = new WriterRepository(getActivity().getApplication());
 
         binding.writerRecycleView.setHasFixedSize(true);
         binding.writerRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        allWriter= libraryRepo.getAllWriters();
+        allWriter= writerRepository.getAllWriters();
         writerAdapter= new WriterAdapter(allWriter);
         binding.writerRecycleView.setAdapter(writerAdapter);
 
         writerDataController= WriterDataController.getInstance();
         writerDataController.setWriterFragmentInterface(this);
 
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
 
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                DeleteWriter(viewHolder.getAdapterPosition());
+            }
+        }).attachToRecyclerView(binding.writerRecycleView);
 
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,8 +90,15 @@ public class WriterFragment extends Fragment implements WriterFragmentInterface 
         return binding.getRoot();
     }
 
+    private void DeleteWriter(int adapterPosition) {
+        Writer writer= allWriter.get(adapterPosition);
+        writerRepository.removeWriter(writer);
+        allWriter.remove(writer);
+        writerAdapter.notifyDataSetChanged();
+    }
+
     private void InsertWriter(Writer writer) {
-        libraryRepo.addWriter(writer);
+        writerRepository.addWriter(writer);
         allWriter.add(writer);
         writerAdapter.notifyDataSetChanged();
     }

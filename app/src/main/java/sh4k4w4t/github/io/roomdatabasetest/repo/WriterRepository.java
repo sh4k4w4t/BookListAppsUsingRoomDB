@@ -13,16 +13,12 @@ import sh4k4w4t.github.io.roomdatabasetest.db.LibraryDatabase;
 import sh4k4w4t.github.io.roomdatabasetest.model.Book;
 import sh4k4w4t.github.io.roomdatabasetest.model.Writer;
 
-public class LibraryRepo {
-    public BookDao bookDao;
+public class WriterRepository {
     public WriterDao writerDao;
-
-    List<Book> bookList = new ArrayList<>();
     List<Writer> writerList = new ArrayList<>();
 
-    public LibraryRepo(Application application) {
+    public WriterRepository(Application application) {
         LibraryDatabase libraryDatabase = LibraryDatabase.getInstance(application);
-        bookDao = libraryDatabase.bookDao();
         writerDao = libraryDatabase.writerDao();
     }
 
@@ -36,7 +32,6 @@ public class LibraryRepo {
             }
         });
     }
-
 
 
 
@@ -61,8 +56,6 @@ public class LibraryRepo {
     }
 
 
-
-
     public List<Writer> getAllWriters(){
         try {
             writerList= new GelAllWriterTask(writerDao).execute().get();
@@ -81,59 +74,5 @@ public class LibraryRepo {
         protected List<Writer> doInBackground(Void... voids) {
             return dao.GetAllWriters();
         }
-    }
-
-
-
-
-
-
-
-
-
-
-    //Book repo section------------------------------------------------------------------
-
-    public void addBook(Book book) {
-        LibraryDatabase.databaseExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                bookDao.InsertBook(book);
-            }
-        });
-    }
-
-
-
-    public void removeBook(Book book) {
-        LibraryDatabase.databaseExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                bookDao.DeleteBook(book);
-            }
-        });
-    }
-
-
-
-    public void updateBook(Book book) {
-        LibraryDatabase.databaseExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                bookDao.UpdateBook(book);
-            }
-        });
-    }
-
-
-
-    public List<Book> getBookList(int writerId) {
-        LibraryDatabase.databaseExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                bookList = bookDao.GetAllBookByWriterId(writerId);
-            }
-        });
-        return bookList;
     }
 }
