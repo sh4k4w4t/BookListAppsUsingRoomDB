@@ -30,7 +30,6 @@ public class BookRepository {
     }
 
 
-
     public void RemoveBook(Book book) {
         LibraryDatabase.databaseExecutor.execute(new Runnable() {
             @Override
@@ -40,8 +39,6 @@ public class BookRepository {
         });
     }
 
-
-
     public void UpdateBook(Book book) {
         LibraryDatabase.databaseExecutor.execute(new Runnable() {
             @Override
@@ -50,6 +47,21 @@ public class BookRepository {
             }
         });
     }
+
+//    public void UpdateBook(Book book) {
+//        new UpdateBookTask(bookDao).execute(book);
+//    }
+//    public static class UpdateBookTask extends AsyncTask<Book,Void,Void>{
+//        BookDao bookDao;
+//        public UpdateBookTask(BookDao bookDao) {
+//            this.bookDao = bookDao;
+//        }
+//        @Override
+//        protected Void doInBackground(Book... books) {
+//            bookDao.UpdateBook(books[0]);
+//            return null;
+//        }
+//    }
 
 
 

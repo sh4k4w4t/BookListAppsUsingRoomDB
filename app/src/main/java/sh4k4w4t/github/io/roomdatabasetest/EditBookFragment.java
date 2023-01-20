@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.room.Update;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +34,6 @@ public class EditBookFragment extends Fragment {
         binding.bookNameEditText.setText(bookDataController.getCurrentBook().getBookName()+"");
         binding.editPriceEditText.setText(bookDataController.getCurrentBook().getBookPrice()+"");
 
-
         binding.updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -44,15 +43,19 @@ public class EditBookFragment extends Fragment {
                 if (bookPrice.isEmpty()||bookTitle.isEmpty()){
                     Toast.makeText(getActivity(), "Please Fill Up All Info", Toast.LENGTH_SHORT).show();
                 }else {
-//                    Book book= new Book(bookTitle,bookTitle,)
-//                    UpdateBookInformation();
+                    Book book= new Book(bookTitle,bookTitle,bookDataController.getCurrentBook().getId());
+                    UpdateBookInformation(book);
                 }
             }
         });
 
-
-
-
         return binding.getRoot();
+    }
+
+    private void UpdateBookInformation(Book book) {
+        bookRepository.UpdateBook(book);
+        Toast.makeText(getActivity(), "Update Book Information", Toast.LENGTH_SHORT).show();
+//        NavHostFragment.findNavController(EditBookFragment.this)
+//                .navigate(R.id.action_EditBookFragment_to_SecondFragment);
     }
 }
