@@ -9,10 +9,10 @@ public class Book {
     @PrimaryKey(autoGenerate = true)
     public int id;
     public String bookName;
-    public Double bookPrice;
+    public String bookPrice;
     public int writerId;
 
-    public Book(String bookName, Double bookPrice, int writerId) {
+    public Book(String bookName, String bookPrice, int writerId) {
         this.bookName = bookName;
         this.bookPrice = bookPrice;
         this.writerId = writerId;
@@ -34,11 +34,11 @@ public class Book {
         this.bookName = bookName;
     }
 
-    public Double getBookPrice() {
+    public String getBookPrice() {
         return bookPrice;
     }
 
-    public void setBookPrice(Double bookPrice) {
+    public void setBookPrice(String bookPrice) {
         this.bookPrice = bookPrice;
     }
 

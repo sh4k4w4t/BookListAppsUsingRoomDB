@@ -1,9 +1,11 @@
 package sh4k4w4t.github.io.roomdatabasetest.repo;
 
 import android.app.Application;
+import android.os.AsyncTask;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import sh4k4w4t.github.io.roomdatabasetest.dao.BookDao;
 import sh4k4w4t.github.io.roomdatabasetest.db.LibraryDatabase;
@@ -18,7 +20,7 @@ public class BookRepository {
         bookDao = libraryDatabase.bookDao();
     }
 
-    public void addBook(Book book) {
+    public void AddBook(Book book) {
         LibraryDatabase.databaseExecutor.execute(new Runnable() {
             @Override
             public void run() {
@@ -29,7 +31,7 @@ public class BookRepository {
 
 
 
-    public void removeBook(Book book) {
+    public void RemoveBook(Book book) {
         LibraryDatabase.databaseExecutor.execute(new Runnable() {
             @Override
             public void run() {
@@ -40,7 +42,7 @@ public class BookRepository {
 
 
 
-    public void updateBook(Book book) {
+    public void UpdateBook(Book book) {
         LibraryDatabase.databaseExecutor.execute(new Runnable() {
             @Override
             public void run() {
@@ -51,13 +53,23 @@ public class BookRepository {
 
 
 
-    public List<Book> getBookList(int writerId) {
-        LibraryDatabase.databaseExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                bookList = bookDao.GetAllBookByWriterId(writerId);
-            }
-        });
+    public List<Book> GetBookListByWriterId(int writerId) {
+        try {
+            bookList= new GetAllBookByWriterIdTask(bookDao).execute(writerId).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
         return bookList;
+    }
+
+    public static class GetAllBookByWriterIdTask extends AsyncTask<Integer,Void,List<Book>>{
+        BookDao dao;
+        public GetAllBookByWriterIdTask(BookDao dao) {
+            this.dao = dao;
+        }
+        @Override
+        protected List<Book> doInBackground(Integer... integers) {
+            return dao.GetAllBookByWriterId(integers[0]);
+        }
     }
 }

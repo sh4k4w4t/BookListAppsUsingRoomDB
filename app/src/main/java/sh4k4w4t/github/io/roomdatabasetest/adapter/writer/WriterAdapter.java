@@ -48,8 +48,8 @@ public class WriterAdapter extends RecyclerView.Adapter<WriterAdapter.viewHolder
         TextView writerName, writerDescription;
         public viewHolder(@NonNull View itemView) {
             super(itemView);
-            writerName= itemView.findViewById(R.id.writerTtile);
-            writerDescription= itemView.findViewById(R.id.writerDescription);
+            writerName= itemView.findViewById(R.id.bookTitle);
+            writerDescription= itemView.findViewById(R.id.bookDescription);
             itemView.setOnClickListener(this);
         }
 

@@ -114,6 +114,5 @@ public class WriterFragment extends Fragment implements WriterFragmentInterface 
         writerDataController.setCurrentWriter(writer);
         NavHostFragment.findNavController(WriterFragment.this)
         .navigate(R.id.action_FirstFragment_to_SecondFragment);
-        Toast.makeText(getActivity(), ""+writer.getWriterName(), Toast.LENGTH_SHORT).show();
     }
 }
