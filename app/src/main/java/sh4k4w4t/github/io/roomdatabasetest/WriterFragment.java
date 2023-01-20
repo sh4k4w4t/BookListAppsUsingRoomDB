@@ -12,12 +12,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import sh4k4w4t.github.io.roomdatabasetest.adapter.WriterAdapter;
 import sh4k4w4t.github.io.roomdatabasetest.databinding.FragmentFirstBinding;
 import sh4k4w4t.github.io.roomdatabasetest.db.LibraryDatabase;
 import sh4k4w4t.github.io.roomdatabasetest.model.Writer;
@@ -28,34 +30,41 @@ public class WriterFragment extends Fragment {
     private FragmentFirstBinding binding;
     LibraryRepo libraryRepo;
 
-    List<Writer> allWriter= new ArrayList<>();
+    WriterAdapter writerAdapter;
+    List<Writer> allWriter = new ArrayList<>();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentFirstBinding.inflate(inflater, container, false);
 
-        libraryRepo= new LibraryRepo(getActivity().getApplication());
+        libraryRepo = new LibraryRepo(getActivity().getApplication());
+
+        binding.writerRecycleView.setHasFixedSize(true);
+        binding.writerRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        allWriter= libraryRepo.getAllWriters();
+        writerAdapter= new WriterAdapter(allWriter);
+        binding.writerRecycleView.setAdapter(writerAdapter);
+
+
 
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Dialog dialog= new Dialog(getActivity());
+                Dialog dialog = new Dialog(getActivity());
                 dialog.setContentView(R.layout.add_writer_custom_dialogue);
-                EditText writerName= dialog.findViewById(R.id.writerName);
-                EditText aboutWriter= dialog.findViewById(R.id.aboutWriter);
-                Button addWriterButton= dialog.findViewById(R.id.addWriterButton);
+                EditText writerName = dialog.findViewById(R.id.writerName);
+                EditText aboutWriter = dialog.findViewById(R.id.aboutWriter);
+                Button addWriterButton = dialog.findViewById(R.id.addWriterButton);
                 addWriterButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (writerName.getText().toString().trim().isEmpty() || aboutWriter.getText().toString().trim().isEmpty()){
+                        if (writerName.getText().toString().trim().isEmpty() || aboutWriter.getText().toString().trim().isEmpty()) {
                             Toast.makeText(getActivity(), "Fill up all info", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            Writer writer= new Writer(writerName.getText().toString().trim(),aboutWriter.getText().toString().trim());
-                            libraryRepo.addWriter(writer);
-                            allWriter.add(writer);
+                        } else {
+                            Writer writer = new Writer(writerName.getText().toString().trim(), aboutWriter.getText().toString().trim());
+                            InsertSemester(writer);
                             dialog.dismiss();
-                            Toast.makeText(getActivity(), writerName.getText().toString().trim()+" added.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), writerName.getText().toString().trim() + " added.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -64,6 +73,12 @@ public class WriterFragment extends Fragment {
         });
 
         return binding.getRoot();
+    }
+
+    private void InsertSemester(Writer writer) {
+        libraryRepo.addWriter(writer);
+        allWriter.add(writer);
+        writerAdapter.notifyDataSetChanged();
     }
 
     @Override

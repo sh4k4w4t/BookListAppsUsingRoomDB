@@ -1,9 +1,11 @@
 package sh4k4w4t.github.io.roomdatabasetest.repo;
 
 import android.app.Application;
+import android.os.AsyncTask;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import sh4k4w4t.github.io.roomdatabasetest.dao.BookDao;
 import sh4k4w4t.github.io.roomdatabasetest.dao.WriterDao;
@@ -15,18 +17,18 @@ public class LibraryRepo {
     public BookDao bookDao;
     public WriterDao writerDao;
 
-    List<Book> bookList= new ArrayList<>();
-    List<Writer> writerList= new ArrayList<>();
+    List<Book> bookList = new ArrayList<>();
+    List<Writer> writerList = new ArrayList<>();
 
     public LibraryRepo(Application application) {
-        LibraryDatabase libraryDatabase= LibraryDatabase.getInstance(application);
-        bookDao= libraryDatabase.bookDao();
-        writerDao= libraryDatabase.writerDao();
+        LibraryDatabase libraryDatabase = LibraryDatabase.getInstance(application);
+        bookDao = libraryDatabase.bookDao();
+        writerDao = libraryDatabase.writerDao();
     }
 
     //Writer repo section----------------------------------------------------------------
 
-    public void addWriter(Writer writer){
+    public void addWriter(Writer writer) {
         LibraryDatabase.databaseExecutor.execute(new Runnable() {
             @Override
             public void run() {
@@ -34,6 +36,9 @@ public class LibraryRepo {
             }
         });
     }
+
+
+
 
     public void removeWriter(Writer writer) {
         LibraryDatabase.databaseExecutor.execute(new Runnable() {
@@ -44,7 +49,9 @@ public class LibraryRepo {
         });
     }
 
-    public void updateWriter(Writer writer){
+
+
+    public void updateWriter(Writer writer) {
         LibraryDatabase.databaseExecutor.execute(new Runnable() {
             @Override
             public void run() {
@@ -53,20 +60,41 @@ public class LibraryRepo {
         });
     }
 
+
+
+
     public List<Writer> getAllWriters(){
-        LibraryDatabase.databaseExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                writerList= writerDao.GetAllWriters();
-            }
-        });
+        try {
+            writerList= new GelAllWriterTask(writerDao).execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
         return writerList;
     }
+    private static class GelAllWriterTask extends AsyncTask<Void,Void,List<Writer>> {
+        WriterDao dao;
+        public GelAllWriterTask(WriterDao writerDao) {
+            this.dao = writerDao;
+        }
+
+        @Override
+        protected List<Writer> doInBackground(Void... voids) {
+            return dao.GetAllWriters();
+        }
+    }
+
+
+
+
+
+
+
+
 
 
     //Book repo section------------------------------------------------------------------
 
-    public void addBook(Book book){
+    public void addBook(Book book) {
         LibraryDatabase.databaseExecutor.execute(new Runnable() {
             @Override
             public void run() {
@@ -75,7 +103,9 @@ public class LibraryRepo {
         });
     }
 
-    public void removeBook(Book book){
+
+
+    public void removeBook(Book book) {
         LibraryDatabase.databaseExecutor.execute(new Runnable() {
             @Override
             public void run() {
@@ -84,7 +114,9 @@ public class LibraryRepo {
         });
     }
 
-    public void updateBook(Book book){
+
+
+    public void updateBook(Book book) {
         LibraryDatabase.databaseExecutor.execute(new Runnable() {
             @Override
             public void run() {
@@ -93,11 +125,13 @@ public class LibraryRepo {
         });
     }
 
-    public List<Book> getBookList(int writerId){
+
+
+    public List<Book> getBookList(int writerId) {
         LibraryDatabase.databaseExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                bookList= bookDao.GetAllBookByWriterId(writerId);
+                bookList = bookDao.GetAllBookByWriterId(writerId);
             }
         });
         return bookList;

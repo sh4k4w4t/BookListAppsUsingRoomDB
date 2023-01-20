@@ -14,7 +14,7 @@ import sh4k4w4t.github.io.roomdatabasetest.dao.WriterDao;
 import sh4k4w4t.github.io.roomdatabasetest.model.Book;
 import sh4k4w4t.github.io.roomdatabasetest.model.Writer;
 
-@Database(entities = {Book.class, Writer.class},version = 4,exportSchema = false)
+@Database(entities = {Book.class, Writer.class},version = 5,exportSchema = false)
 public abstract class LibraryDatabase extends RoomDatabase {
 
     public abstract BookDao bookDao();
@@ -27,7 +27,7 @@ public abstract class LibraryDatabase extends RoomDatabase {
 
     public static LibraryDatabase getInstance(final Context context){
         if (INSTANCE==null){
-            INSTANCE= Room.databaseBuilder(context.getApplicationContext(), LibraryDatabase.class, "LibraryDatabase")
+            INSTANCE= Room.databaseBuilder(context.getApplicationContext(), LibraryDatabase.class, "LIBRARYDATABASE")
                     .fallbackToDestructiveMigration()
                     .build();
         }
