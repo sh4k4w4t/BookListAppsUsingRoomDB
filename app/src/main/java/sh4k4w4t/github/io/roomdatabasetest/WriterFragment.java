@@ -14,24 +14,24 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import sh4k4w4t.github.io.roomdatabasetest.adapter.WriterAdapter;
+import sh4k4w4t.github.io.roomdatabasetest.adapter.writer.WriterAdapter;
+import sh4k4w4t.github.io.roomdatabasetest.adapter.writer.WriterDataController;
+import sh4k4w4t.github.io.roomdatabasetest.adapter.writer.WriterFragmentInterface;
 import sh4k4w4t.github.io.roomdatabasetest.databinding.FragmentFirstBinding;
-import sh4k4w4t.github.io.roomdatabasetest.db.LibraryDatabase;
 import sh4k4w4t.github.io.roomdatabasetest.model.Writer;
 import sh4k4w4t.github.io.roomdatabasetest.repo.LibraryRepo;
 
-public class WriterFragment extends Fragment {
+public class WriterFragment extends Fragment implements WriterFragmentInterface {
 
     private FragmentFirstBinding binding;
     LibraryRepo libraryRepo;
 
     WriterAdapter writerAdapter;
     List<Writer> allWriter = new ArrayList<>();
+    WriterDataController writerDataController;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,6 +44,9 @@ public class WriterFragment extends Fragment {
         allWriter= libraryRepo.getAllWriters();
         writerAdapter= new WriterAdapter(allWriter);
         binding.writerRecycleView.setAdapter(writerAdapter);
+
+        writerDataController= WriterDataController.getInstance();
+        writerDataController.setWriterFragmentInterface(this);
 
 
 
@@ -62,7 +65,7 @@ public class WriterFragment extends Fragment {
                             Toast.makeText(getActivity(), "Fill up all info", Toast.LENGTH_SHORT).show();
                         } else {
                             Writer writer = new Writer(writerName.getText().toString().trim(), aboutWriter.getText().toString().trim());
-                            InsertSemester(writer);
+                            InsertWriter(writer);
                             dialog.dismiss();
                             Toast.makeText(getActivity(), writerName.getText().toString().trim() + " added.", Toast.LENGTH_SHORT).show();
                         }
@@ -75,7 +78,7 @@ public class WriterFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void InsertSemester(Writer writer) {
+    private void InsertWriter(Writer writer) {
         libraryRepo.addWriter(writer);
         allWriter.add(writer);
         writerAdapter.notifyDataSetChanged();
@@ -86,8 +89,12 @@ public class WriterFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+    @Override
+    public void onWriterItemClick(Writer writer) {
+        writerDataController.setCurrentWriter(writer);
+        NavHostFragment.findNavController(WriterFragment.this)
+        .navigate(R.id.action_FirstFragment_to_SecondFragment);
+        Toast.makeText(getActivity(), ""+writer.getWriterName(), Toast.LENGTH_SHORT).show();
+    }
 }
-
-
-//NavHostFragment.findNavController(WriterFragment.this)
-//        .navigate(R.id.action_FirstFragment_to_SecondFragment);

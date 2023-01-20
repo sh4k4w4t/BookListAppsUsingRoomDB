@@ -1,4 +1,4 @@
-package sh4k4w4t.github.io.roomdatabasetest.adapter;
+package sh4k4w4t.github.io.roomdatabasetest.adapter.writer;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
@@ -9,16 +9,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.time.temporal.Temporal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Handler;
 
 import sh4k4w4t.github.io.roomdatabasetest.R;
 import sh4k4w4t.github.io.roomdatabasetest.model.Writer;
 
 public class WriterAdapter extends RecyclerView.Adapter<WriterAdapter.viewHolder>{
-    List<Writer> writerList= new ArrayList<>();
+    List<Writer> writerList;
 
     public WriterAdapter(List<Writer> writerList) {
         this.writerList = writerList;
@@ -47,12 +44,18 @@ public class WriterAdapter extends RecyclerView.Adapter<WriterAdapter.viewHolder
         return writerList.size();
     }
 
-    public class viewHolder extends RecyclerView.ViewHolder{
+    public class viewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView writerName, writerDescription;
         public viewHolder(@NonNull View itemView) {
             super(itemView);
             writerName= itemView.findViewById(R.id.writerTtile);
             writerDescription= itemView.findViewById(R.id.writerDescription);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            WriterDataController.INSTANCE.getWriterFragmentInterface().onWriterItemClick(writerList.get(getAdapterPosition()));
         }
     }
 }
