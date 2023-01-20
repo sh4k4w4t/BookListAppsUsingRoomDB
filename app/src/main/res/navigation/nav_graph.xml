@@ -24,5 +24,19 @@
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
+        <action
+            android:id="@+id/action_SecondFragment_to_EditBookFragment"
+            app:destination="@id/EditBookFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/EditBookFragment"
+        android:name="sh4k4w4t.github.io.roomdatabasetest.EditBookFragment"
+        android:label="@string/edit_book_fragment_label"
+        tools:layout="@layout/fragment_edit_book">
+
+        <action
+            android:id="@+id/action_EditBookFragment_to_SecondFragment"
+            app:destination="@id/SecondFragment" />
     </fragment>
 </navigation>

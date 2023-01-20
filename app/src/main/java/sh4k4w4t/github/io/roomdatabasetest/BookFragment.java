@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -104,6 +105,7 @@ public class BookFragment extends Fragment implements BookFragmentInterface {
     @Override
     public void onBookItemClick(Book book) {
         bookDataController.setCurrentBook(book);
-//        Toast.makeText(getActivity(), ""+book.getBookName(), Toast.LENGTH_SHORT).show();
+        NavHostFragment.findNavController(BookFragment.this)
+                .navigate(R.id.action_SecondFragment_to_EditBookFragment);
     }
 }
